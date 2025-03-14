@@ -7,6 +7,7 @@ import Animated, {
   useAnimatedStyle,
   withTiming,
   runOnJS,
+  interpolateColor,
 } from 'react-native-reanimated';
 import {PokemonDetailsType, PokemonType} from '../types';
 import {usePokedexStore} from '../store';
@@ -66,6 +67,11 @@ export default function PokemonCard({pokemon, index}: PokemonCardProps) {
       {translateY: prevTranslationY.value + translationY.value},
       {rotate: `${rotation.value}deg`},
     ],
+    backgroundColor: interpolateColor(
+      translationX.value,
+      [-width * 0.7, 0, width * 0.7],
+      ['#ff0000', '#fff', '#00ff00'],
+    ),
   }));
 
   if (isLoading) {
