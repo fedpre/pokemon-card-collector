@@ -68,4 +68,5 @@ As this is an example project, some of the things I would do differently on a fu
 - Add app analytics to keep track of user behaviour
 - Add app auth as needed (firebase, supabase, custom backend)
 - Add production logs (Sentry, DataDog, etc)
--
+- App Icon
+- Release to store
