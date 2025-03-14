@@ -1,36 +1,18 @@
-import React from 'react';
-import {ScrollView, StatusBar, StyleSheet, Text, View} from 'react-native';
+import React, {JSX} from 'react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Navigation from './src/navigation';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
-function App(): React.JSX.Element {
+const client = new QueryClient();
+
+function App(): JSX.Element {
   return (
-    <GestureHandlerRootView>
-      <View style={styles.container}>
-        <StatusBar barStyle={'light-content'} backgroundColor={'#000'} />
-        <ScrollView contentContainerStyle={styles.scrollView}>
-          <Text style={styles.text}>Hello World</Text>
-        </ScrollView>
-      </View>
-    </GestureHandlerRootView>
+    <QueryClientProvider client={client}>
+      <GestureHandlerRootView>
+        <Navigation />
+      </GestureHandlerRootView>
+    </QueryClientProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  scrollView: {
-    flex: 1,
-    backgroundColor: '#000',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  text: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
 
 export default App;
