@@ -1,29 +1,39 @@
 import {Dimensions, Image, StyleSheet, Text} from 'react-native';
-import {Pokemon} from '../screens/pokemon';
 import {useQuery} from '@tanstack/react-query';
 import {fetchPokemon} from '../api/queries';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  withTiming,
+  runOnJS,
 } from 'react-native-reanimated';
-
+import {PokemonDetailsType, PokemonType} from '../types';
+import {usePokedexStore} from '../store';
 interface PokemonCardProps {
-  pokemon: Pokemon;
+  pokemon: PokemonType;
+  index: number;
 }
 
 const {width, height} = Dimensions.get('screen');
 
-export default function PokemonCard({pokemon}: PokemonCardProps) {
+export default function PokemonCard({pokemon, index}: PokemonCardProps) {
+  const {addPokemon} = usePokedexStore();
   const translationX = useSharedValue(0);
   const translationY = useSharedValue(0);
   const prevTranslationX = useSharedValue(0);
   const prevTranslationY = useSharedValue(0);
+  const rotation = useSharedValue(0);
 
   const {data, isLoading, isError} = useQuery({
     queryKey: ['pokemon', pokemon.url],
     queryFn: () => fetchPokemon(pokemon.url),
   });
+
+  const pokemonDetails: PokemonDetailsType = {
+    name: data?.name,
+    image: data?.sprites.front_shiny,
+  };
 
   const panGesture = Gesture.Pan()
     .onStart(() => {
@@ -33,18 +43,33 @@ export default function PokemonCard({pokemon}: PokemonCardProps) {
     .onUpdate(event => {
       translationX.value = event.translationX;
       translationY.value = event.translationY;
-      console.log(event.translationX, event.translationY);
+      rotation.value = event.translationX / 10;
+    })
+    .onEnd(() => {
+      if (translationX.value > width * 0.3) {
+        translationX.value = withTiming(width * 2);
+        runOnJS(addPokemon)(pokemonDetails);
+        return;
+      }
+      if (translationX.value < -width * 0.3) {
+        translationX.value = withTiming(-width * 2);
+        return;
+      }
+      translationX.value = withTiming(0);
+      translationY.value = withTiming(0);
+      rotation.value = withTiming(0);
     });
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [
       {translateX: prevTranslationX.value + translationX.value},
       {translateY: prevTranslationY.value + translationY.value},
+      {rotate: `${rotation.value}deg`},
     ],
   }));
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return null;
   }
 
   if (isError) {
@@ -55,7 +80,15 @@ export default function PokemonCard({pokemon}: PokemonCardProps) {
 
   return (
     <GestureDetector gesture={panGesture}>
-      <Animated.View style={[animatedStyles, styles.container]}>
+      <Animated.View
+        style={[
+          animatedStyles,
+          styles.container,
+          {
+            top: height * 0.1 + index * 4,
+            zIndex: index,
+          },
+        ]}>
         <Image source={{uri: sprites.front_shiny}} style={styles.sprites} />
         <Text style={styles.name}>{pokemon.name}</Text>
         <Text style={styles.name}>{base_experience}</Text>
@@ -76,10 +109,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: width * 0.8,
     height: height * 0.6,
+    position: 'absolute',
+    top: height * 0.15,
   },
   sprites: {
-    width: 100,
-    height: 100,
+    width: 300,
+    height: 300,
   },
   name: {
     fontSize: 24,

@@ -1,12 +1,8 @@
 import {useQuery} from '@tanstack/react-query';
-import {Text, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, StyleSheet, SafeAreaView, ActivityIndicator} from 'react-native';
 import {fetchPokemonList} from '../api/queries';
-import PokemonCard from '../components/PokemonCard';
-
-export interface Pokemon {
-  name: string;
-  url: string;
-}
+import PokemonCard from '../components/pokemon-card';
+import {PokemonType} from '../types';
 
 export default function Pokemon() {
   const {data, isLoading, isError} = useQuery({
@@ -15,7 +11,7 @@ export default function Pokemon() {
   });
 
   if (isLoading) {
-    return <Text>Loading...</Text>;
+    return <ActivityIndicator size="large" color="#000" />;
   }
 
   if (isError) {
@@ -24,8 +20,8 @@ export default function Pokemon() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Pokemon</Text>
-      {data?.results.map((pokemon: Pokemon) => (
-        <PokemonCard key={pokemon.name} pokemon={pokemon} />
+      {data?.results.map((pokemon: PokemonType, index: number) => (
+        <PokemonCard key={pokemon.name} pokemon={pokemon} index={index} />
       ))}
     </SafeAreaView>
   );
