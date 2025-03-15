@@ -14,6 +14,7 @@ import Animated, {
 import {PokemonDetailsType, PokemonType} from '../types';
 import {usePokedexStore} from '../store';
 import {PokemonExperience} from './pokemon-experience';
+import {memo} from 'react';
 interface PokemonCardProps {
   pokemon: PokemonType;
   index: number;
@@ -21,7 +22,7 @@ interface PokemonCardProps {
 
 const {width, height} = Dimensions.get('screen');
 
-export default function PokemonCard({pokemon, index}: PokemonCardProps) {
+export const PokemonCard = memo(({pokemon, index}: PokemonCardProps) => {
   const {addPokemon} = usePokedexStore();
   const translationX = useSharedValue(0);
   const translationY = useSharedValue(0);
@@ -110,7 +111,7 @@ export default function PokemonCard({pokemon, index}: PokemonCardProps) {
       </Animated.View>
     </GestureDetector>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

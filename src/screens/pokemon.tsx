@@ -1,8 +1,8 @@
 import {useQuery} from '@tanstack/react-query';
 import {Text, StyleSheet, SafeAreaView, ActivityIndicator} from 'react-native';
 import {fetchPokemonList} from '../api/queries';
-import PokemonCard from '../components/pokemon-card';
 import {PokemonType} from '../types';
+import {PokemonCard} from '../components/pokemon-card';
 
 export default function Pokemon() {
   const {data, isLoading, isError} = useQuery({

@@ -4,6 +4,7 @@ import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Animated, {SharedValue, useAnimatedStyle} from 'react-native-reanimated';
 import {usePokedexStore} from '../store';
+import {memo} from 'react';
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
@@ -28,7 +29,8 @@ function RightAction(
     </AnimatedPressable>
   );
 }
-export function PokedexCard({pokemon}: {pokemon: PokemonDetailsType}) {
+
+export const PokedexCard = memo(({pokemon}: {pokemon: PokemonDetailsType}) => {
   return (
     <ReanimatedSwipeable
       containerStyle={[styles.container, styles.divider]}
@@ -49,7 +51,7 @@ export function PokedexCard({pokemon}: {pokemon: PokemonDetailsType}) {
       </View>
     </ReanimatedSwipeable>
   );
-}
+});
 
 const styles = StyleSheet.create({
   sprite: {
