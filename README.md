@@ -2,6 +2,12 @@
 
 A React Native mobile application that allows users to browse Pokemon cards and collect their favorites in a personal Pokedex.
 
+## 📺 Demo Video
+
+[![Pokemon Card Collector Demo](https://img.youtube.com/vi/unNdPH0L3j0/0.jpg)](https://youtu.be/unNdPH0L3j0)
+
+_Click the image above to watch the demo video on YouTube_
+
 ## 📱 App Purpose
 
 Pokemon Card Collector is a mobile application that:
