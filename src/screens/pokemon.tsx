@@ -19,7 +19,6 @@ export default function Pokemon() {
   }
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Pokemon</Text>
       {data?.results.map((pokemon: PokemonType, index: number) => (
         <PokemonCard key={pokemon.name} pokemon={pokemon} index={index} />
       ))}

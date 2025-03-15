@@ -8,9 +8,12 @@ import Animated, {
   withTiming,
   runOnJS,
   interpolateColor,
+  FadeIn,
+  FadeOut,
 } from 'react-native-reanimated';
 import {PokemonDetailsType, PokemonType} from '../types';
 import {usePokedexStore} from '../store';
+import {PokemonExperience} from './pokemon-experience';
 interface PokemonCardProps {
   pokemon: PokemonType;
   index: number;
@@ -97,8 +100,13 @@ export default function PokemonCard({pokemon, index}: PokemonCardProps) {
           },
         ]}>
         <Image source={{uri: sprites.front_shiny}} style={styles.sprites} />
-        <Text style={styles.name}>{pokemon.name}</Text>
-        <Text style={styles.name}>{base_experience}</Text>
+        <Animated.View
+          style={styles.infoContainer}
+          entering={FadeIn}
+          exiting={FadeOut}>
+          <Text style={styles.name}>{pokemon.name}</Text>
+          <PokemonExperience baseExperience={Number(base_experience)} />
+        </Animated.View>
       </Animated.View>
     </GestureDetector>
   );
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignSelf: 'center',
     width: width * 0.8,
-    height: height * 0.6,
+    height: height * 0.5,
     position: 'absolute',
     top: height * 0.15,
   },
@@ -127,5 +135,12 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#333',
+  },
+  infoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    paddingHorizontal: 16,
   },
 });
