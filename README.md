@@ -70,3 +70,4 @@ As this is an example project, some of the things I would do differently on a fu
 - Add production logs (Sentry, DataDog, etc)
 - App Icon
 - Release to store
+- Data persistence: local (drizzle sqlite) and/or cloud database (with or without backend)

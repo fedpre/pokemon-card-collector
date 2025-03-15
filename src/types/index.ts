@@ -4,6 +4,7 @@ export interface PokemonType {
 }
 
 export interface PokemonDetailsType {
+  id: number;
   name: string;
   image: string;
 }

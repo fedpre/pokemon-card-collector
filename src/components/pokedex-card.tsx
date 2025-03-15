@@ -1,16 +1,53 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {PokemonDetailsType} from '../types';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import Animated, {SharedValue, useAnimatedStyle} from 'react-native-reanimated';
+import {usePokedexStore} from '../store';
 
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
+
+function RightAction(
+  prog: SharedValue<number>,
+  drag: SharedValue<number>,
+  pokemon: PokemonDetailsType,
+) {
+  const {removePokemon} = usePokedexStore();
+
+  const styleAnimation = useAnimatedStyle(() => {
+    return {
+      transform: [{translateX: drag.value + 50}],
+    };
+  });
+
+  return (
+    <AnimatedPressable
+      style={[styles.pressable, styleAnimation]}
+      onPress={() => removePokemon(pokemon)}>
+      <Icon name="delete" size={24} color="white" />
+    </AnimatedPressable>
+  );
+}
 export function PokedexCard({pokemon}: {pokemon: PokemonDetailsType}) {
   return (
-    <View style={styles.container}>
-      <View style={styles.pokemonInfo}>
-        <Image source={{uri: pokemon.image}} style={styles.sprite} />
-        <Text style={styles.pokemonName}>{pokemon.name}</Text>
+    <ReanimatedSwipeable
+      containerStyle={[styles.container, styles.divider]}
+      friction={2}
+      enableTrackpadTwoFingerGesture
+      rightThreshold={40}
+      renderRightActions={(progress, dragX) =>
+        RightAction(progress, dragX, pokemon)
+      }>
+      <View id={pokemon.id.toString()} style={styles.container}>
+        <View style={styles.pokemonInfo}>
+          <Image source={{uri: pokemon.image}} style={styles.sprite} />
+          <Text style={styles.pokemonName}>{pokemon.name}</Text>
+        </View>
+        <View style={styles.bookmarkContainer}>
+          <Icon name="bookmark" size={24} color="red" />
+        </View>
       </View>
-      <Icon name="bookmark" size={24} color="red" />
-    </View>
+    </ReanimatedSwipeable>
   );
 }
 
@@ -21,14 +58,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingRight: 16,
-    borderBottomColor: '#999',
-    borderBottomWidth: StyleSheet.hairlineWidth,
     paddingVertical: 16,
+  },
+  divider: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#999',
   },
   pokemonInfo: {
     flexDirection: 'row',
@@ -38,5 +76,15 @@ const styles = StyleSheet.create({
   pokemonName: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  bookmarkContainer: {
+    paddingRight: 16,
+  },
+  pressable: {
+    width: 50,
+    height: '100%',
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

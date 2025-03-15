@@ -1,16 +1,19 @@
-import {FlatList, SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import {usePokedexStore} from '../store';
 import {PokedexCard} from '../components/pokedex-card';
+import Animated, {LinearTransition} from 'react-native-reanimated';
 
 export default function Pokedex() {
   const {pokemon} = usePokedexStore();
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
+      <Animated.FlatList
         data={pokemon}
         renderItem={({item}) => <PokedexCard key={item.name} pokemon={item} />}
         ListEmptyComponent={EmptyComponent}
+        itemLayoutAnimation={LinearTransition}
+        keyExtractor={item => item.id.toString()}
       />
     </SafeAreaView>
   );

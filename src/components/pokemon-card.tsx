@@ -32,6 +32,7 @@ export default function PokemonCard({pokemon, index}: PokemonCardProps) {
   });
 
   const pokemonDetails: PokemonDetailsType = {
+    id: data?.id,
     name: data?.name,
     image: data?.sprites.front_shiny,
   };
